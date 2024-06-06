@@ -1,0 +1,76 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextIndex", "fullTextSearch"]
+}
+
+model User {
+  id             String     @id
+  name           String
+  photo          String
+  email          String     @unique
+  email_verified Boolean    @default(false)
+  sessions       Session[]
+  Blog           Blog[]
+  Comments       Comments[]
+  Likes          Likes[]
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  expiresAt DateTime
+  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Blog {
+  id          Int        @id @default(autoincrement())
+  title       String
+  description String
+  content     String
+  likes_count Int
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Comments    Comments[]
+  Likes       Likes[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Comments {
+  userId    String
+  blogId    Int
+  content   String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  blog      Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@id([userId, blogId])
+}
+
+model Likes {
+  userId    String
+  blogId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  blog      Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@id([userId, blogId])
+}
