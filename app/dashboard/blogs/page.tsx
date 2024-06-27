@@ -1,43 +1,65 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { FaEdit } from 'react-icons/fa';
-import { IoTrashBin } from 'react-icons/io5';
+import CardBlog from '../../../components/cardBlog';
+import { getWithBlogFn } from '@/app/actions/site/actions';
+import { clearBlogs } from '@/app/actions/(temp)/clearCookiesBlog/actions';
 
-export default () => {
+export default async () => {
+  const getSites = await getWithBlogFn();
+  if (!getSites) {
+    return (
+      <>
+        <div className='flex items-center justify-between'>
+          <h1 className='my-4 text-xl font-medium'>Blogs</h1>
+          <Link href='blogs/add'>
+            <Button>+ New</Button>
+          </Link>
+        </div>
+        <section className='space-y-2'>
+          {/*TODO: Removing "any" from here */}
+          <p>0 Sites</p>
+        </section>
+      </>
+    );
+  }
   return (
     <>
-      <h1 className='my-4 text-xl font-medium'>Blogs</h1>
-      <section className=''>
-        <article className='relative w-96 rounded border'>
-          <div className='absolute right-2 top-2 flex items-center gap-2'>
-            <Button variant={'secondary'} className='px-4 py-1'>
-              <Link href='/dashboard/blogs/laskdjgasdf/edit'>
-                <FaEdit />
-              </Link>
-            </Button>
-            <Button
-              variant={'destructive'}
-              className='group px-4 py-1 shadow-inner'
+      <div className='flex items-center justify-between'>
+        <h1 className='my-4 text-xl font-medium'>Blogs</h1>
+        {/*TODO: Remove this later */}
+        <Link href='blogs/add'>
+          <Button>+ New</Button>
+        </Link>
+      </div>
+      <section className='space-y-2'>
+        {/*TODO: Removing "any" from here */}
+        {getSites.length > 0 &&
+          getSites.map((data: any) => (
+            <article
+              key={`${data.id}`}
+              className='px-2 py-5 hover:rounded hover:border'
             >
-              <IoTrashBin />
-            </Button>
-          </div>
-          <img
-            src=''
-            alt=''
-            className='h-40 w-full overflow-hidden bg-blue-200'
-          />
-          <div className='mx-4 my-2 space-y-2'>
-            <h4>Life could be dream</h4>
-            <p className='text-xs'>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat
-              minus, harum rerum id dignissimos voluptates. Ea in similique
-              dolor commodi nam facere at deleniti ipsum rem quaerat. Ea,
-              molestias? Repudiandae.
-            </p>
-          </div>
-        </article>
+                <h3>{data.name}</h3>
+                <p>{data.description}</p>
+                <BlogSection blog={data.Blog} />
+            </article>
+          ))}
       </section>
     </>
   );
 };
+
+function BlogSection({blog}:{blog:{id:string, title:string, description:string}[]}){
+  if(!blog){
+    return <section>
+      <p>No Blog for this site</p>
+    </section>
+  }
+  return (
+    <section>
+      {blog.map(({id,title,description}:{id:string, title:string, description:string})=>(
+        <CardBlog key={id} name={title} description={description} blogId={id} />
+      ))}
+    </section>
+  )
+}

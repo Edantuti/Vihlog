@@ -1,5 +1,6 @@
 import { Flex, Grid, Box, Heading } from '@radix-ui/themes';
 import { FaGoogle } from 'react-icons/fa';
+import { FaGithub } from "react-icons/fa";
 import { redirect } from 'next/navigation';
 import { getUser } from '@/utils/auth';
 import { Button } from '@/components/ui/button';
@@ -33,6 +34,16 @@ export default async function Page() {
             >
               <Button className=''>
                 <FaGoogle /> Login with Google
+              </Button>
+            </form>
+            <form
+              action={async () => {
+                'use server';
+                await redirect('/api/auth/github');
+              }}
+            >
+              <Button className=''>
+                <FaGithub /> Login with Github
               </Button>
             </form>
           </Flex>

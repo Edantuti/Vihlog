@@ -10,26 +10,29 @@ generator client {
 }
 
 model User {
-  id             String     @id
+  id             String    @id
   name           String
+  github_id      Int       @unique
   photo          String
-  email          String     @unique
-  email_verified Boolean    @default(false)
+  email          String?
+  email_verified Boolean   @default(false)
   sessions       Session[]
   Blog           Blog[]
-  Comments       Comments[]
-  Likes          Likes[]
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
+  // Comments       Comments[]
+  Sites          Sites[]
+  // Likes          Likes[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 }
 
 model Session {
-  id        String   @id
-  userId    String
-  expiresAt DateTime
-  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id
+  userId      String
+  accessToken String
+  expiresAt   DateTime
+  user        User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model VerificationToken {
@@ -41,36 +44,48 @@ model VerificationToken {
 }
 
 model Blog {
-  id          Int        @id @default(autoincrement())
+  id          String   @id @default(cuid())
   title       String
-  description String
-  content     String
-  likes_count Int
+  photo       String?
+  description String?
+  likes_count Int      @default(0)
   userId      String
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Comments    Comments[]
-  Likes       Likes[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  sitesId     String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sites       Sites    @relation(fields: [sitesId], references: [id], onDelete: Cascade)
+  // Comments    Comments[]
+  // Likes       Likes[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
-model Comments {
-  userId    String
-  blogId    Int
-  content   String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  blog      Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
+// model Comments {
+//   userId    String
+//   blogId    Int
+//   content   String
+//   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   blog      Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+//   createdAt DateTime @default(now())
 
-  @@id([userId, blogId])
+//   @@id([userId, blogId])
+// }
+
+model Sites {
+  userId      String
+  id          String @id @default(cuid())
+  name        String
+  description String
+  fullName    String
+  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Blog        Blog[]
 }
 
-model Likes {
-  userId    String
-  blogId    Int
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  blog      Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
+// model Likes {
+//   userId    String
+//   blogId    Int
+//   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   blog      Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+//   createdAt DateTime @default(now())
 
-  @@id([userId, blogId])
-}
+//   @@id([userId, blogId])
+// }

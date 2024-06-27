@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Header from '@/components/Header';
 
 export default async ({ children }: { children: React.ReactNode }) => {
