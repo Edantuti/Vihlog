@@ -1,53 +1,71 @@
-'use client';
-import { useState, useEffect } from 'react';
-import TipTap from '@/components/TipTap';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { EditorProvider, useEditor } from '@tiptap/react';
-import { editFn } from '@/app/actions/blog/actions';
-import { useFormStatus } from 'react-dom';
-import SubmitButton from './submitButton';
-export default ({blogId, blogContent}:{blogId:string, blogContent:{data:{[key:string]:any}, content:string}}) => {
+"use client";
+import { useState } from "react";
+import TipTap from "@/components/TipTap";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { editFn } from "@/app/actions/blog/actions";
+import { toast } from "sonner";
+import SubmitButton from "./submitButton";
+
+
+function EditorConfiguration({
+  blogId,
+  blogContent,
+}: {
+  blogId: string;
+  blogContent: { data: { [key: string]: any }; content: string };
+}) {
   const [data, setData] = useState<string>(blogContent.content);
-  const editFnWithData = editFn.bind(null,blogId,data);
+  const editFnWithData = editFn.bind(null, blogId, data);
+  async function serverActions(formData: FormData) {
+    const result = await editFnWithData(formData);
+    if (result && result.error) {
+      return toast.error("Some Happend");
+    }
+    toast.success("Form Submitted.");
+  }
   return (
     <>
+
+      {/* TODO: Refactor required */}
+      <TipTap onChange={setData} content={blogContent.content} />
       <form
-        action={editFnWithData}
-        className='flex min-h-96 w-72 flex-col justify-between border p-5 rounded'
+        action={serverActions}
+        className="flex min-h-screen w-96 flex-col space-y-2 p-5 rounded border-l"
       >
-        <Label htmlFor='title'>Title:</Label>
+        <Label htmlFor="title" className="text-lg">Title</Label>
         <Input
-          id='title'
-          name='title'
-          type='text'
-          placeholder='What should be the Title?'
-          className=''
+          id="title"
+          name="title"
+          type="text"
+          placeholder="What should be the Title?"
+          className=""
           defaultValue={blogContent.data.title}
         />
-        <Label htmlFor='description'>Description:(currently not implemented)</Label>
+        <Label htmlFor="description" className="text-lg">
+          Description
+        </Label>
         <Textarea
-          id='description'
-          name='description'
-          placeholder='what about description?'
-          className='max-h-screen'
+          id="description"
+          name="description"
+          placeholder="what about description?"
+          className="max-h-screen"
           defaultValue={blogContent.data.description}
         />
 
-        <Label htmlFor='picture'>Cover Photo:(currently not implemented)</Label>
+        <Label htmlFor="picture" className="text-lg">Cover Photo</Label>
         <Input
-          id='picture'
-          name='picture'
-          type='file'
+          id="picture"
+          name="picture"
+          type="file"
+          disabled
           accept={`image/png, image/jpeg, image/webp`}
         />
         <SubmitButton>Publish</SubmitButton>
       </form>
-
-      {/* TODO: Refactor required */}
-      <TipTap onChange={setData} content={blogContent.content} />
     </>
   );
-};
+}
+EditorConfiguration.displayName = "EditorConfiguration";
+export default EditorConfiguration;

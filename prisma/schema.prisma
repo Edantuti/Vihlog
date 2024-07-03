@@ -72,11 +72,12 @@ model Blog {
 
 model Sites {
   userId      String
-  id          String @id @default(cuid())
+  id          String  @id @default(cuid())
   name        String
   description String
   fullName    String
-  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  private     Boolean @default(false)
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   Blog        Blog[]
 }
 

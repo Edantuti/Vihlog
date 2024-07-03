@@ -1,11 +1,11 @@
-import { PrismaAdapter } from '@lucia-auth/adapter-prisma';
-import { Lucia } from 'lucia';
-import { db } from './db';
-import { GitHub, Google } from 'arctic';
-import { cache } from 'react';
-import { cookies } from 'next/headers';
-import type { Session, User } from 'lucia';
-import { redirect, RedirectType } from 'next/navigation';
+import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
+import { Lucia } from "lucia";
+import { db } from "./db";
+import { GitHub, Google } from "arctic";
+import { cache } from "react";
+import { cookies } from "next/headers";
+import type { Session, User } from "lucia";
+import { redirect, RedirectType } from "next/navigation";
 
 export const adapter = new PrismaAdapter(db.session, db.user);
 
@@ -13,8 +13,7 @@ export const lucia = new Lucia(adapter, {
   sessionCookie: {
     expires: true,
     attributes: {
-      
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === "production",
     },
   },
   getUserAttributes: (attributes) => {
@@ -30,10 +29,10 @@ export const lucia = new Lucia(adapter, {
 
 export const github = new GitHub(
   process.env.GITHUB_CLIENT_ID!,
-  process.env.GITHUB_CLIENT_SECRET!
-)
+  process.env.GITHUB_CLIENT_SECRET!,
+);
 
-declare module 'lucia' {
+declare module "lucia" {
   interface Register {
     Lucia: typeof lucia;
     DatabaseUserAttributes: DatabaseUserAttributes;
@@ -62,7 +61,7 @@ export const getUser = cache(
         cookies().set(
           sessionCookie.name,
           sessionCookie.value,
-          sessionCookie.attributes
+          sessionCookie.attributes,
         );
       }
       if (!session) {
@@ -70,22 +69,22 @@ export const getUser = cache(
         cookies().set(
           sessionCookie.name,
           sessionCookie.value,
-          sessionCookie.attributes
+          sessionCookie.attributes,
         );
       }
     } catch (error) {
       console.error(error);
     }
     return result;
-  }
+  },
 );
 
 export const logout = async () => {
-  'use server';
+  "use server";
   const { session } = await getUser();
   if (!session) {
     return {
-      error: 'Unauthorized',
+      error: "Unauthorized",
     };
   }
 
@@ -95,7 +94,7 @@ export const logout = async () => {
   cookies().set(
     sessionCookie.name,
     sessionCookie.value,
-    sessionCookie.attributes
+    sessionCookie.attributes,
   );
-  return redirect('/');
+  return redirect("/");
 };
