@@ -59,7 +59,6 @@ function EditorConfiguration({
           id="picture"
           name="picture"
           type="file"
-          disabled
           accept={`image/png, image/jpeg, image/webp`}
         />
         <SubmitButton>Publish</SubmitButton>

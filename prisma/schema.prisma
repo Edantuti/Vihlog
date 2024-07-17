@@ -28,7 +28,6 @@ model User {
 model Session {
   id          String   @id
   userId      String
-  accessToken String
   expiresAt   DateTime
   user        User     @relation(references: [id], fields: [userId], onDelete: Cascade)
   createdAt   DateTime @default(now())

@@ -6,15 +6,15 @@ import Document from "@tiptap/extension-document";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import Link from "@tiptap/extension-link";
+import { Image } from "@tiptap/extension-image";
 import { ToggleGroup } from "./ui/toggle-group";
 import { ToggleGroupItem } from "./ui/toggle-group";
+import { useParams } from "next/navigation";
 
 import {
   FaBold,
   FaImage,
   FaItalic,
-  FaLink,
-  FaPlus,
   FaStrikethrough,
   FaUnderline,
 } from "react-icons/fa";
@@ -23,6 +23,7 @@ import { Button } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import { toast } from "sonner";
 
 const CustomDocument = Document.extend({
   content: "heading block*",
@@ -47,11 +48,13 @@ export default function Editor({
   content: string;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const { slug } = useParams<{ slug: string }>();
   const editor = useEditor({
     onBlur({ editor }) {
       onChange(editor.getHTML());
     },
     extensions: [
+      Image,
       CustomDocument,
       StarterKit.configure({
         document: false,
@@ -77,12 +80,32 @@ export default function Editor({
       },
     },
   });
-  function addImage() {
-    if(inputRef?.current?.files){
-      const file = inputRef?.current?.files[0]
-      console.log(URL.createObjectURL(file))
+  async function addImage(formData: FormData) {
+    if (!formData.get("imgName")) {
+      toast.error("Provide file name");
+      return;
     }
-
+    if (inputRef?.current?.files) {
+      const file = inputRef?.current?.files[0];
+      const reader = new FileReader();
+      console.log(file)
+      reader.readAsDataURL(file);
+      reader.onload = async () => {
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          body: JSON.stringify({
+            image: reader.result!.toString(),
+            name: formData.get("imgName")!.toString(),
+            blogName: decodeURI(slug),
+          }),
+        });
+        if (!response.ok) {
+          return toast.error("Invalid details or file");
+        }
+        const res_data = await response.json();
+        editor?.chain().focus().setImage({ src: res_data.url }).run();
+      };
+    }
   }
   function addHeading(type: string) {
     const edit = editor?.chain();
@@ -170,18 +193,22 @@ export default function Editor({
         <Separator orientation="vertical" className="border h-4 border-black" />
         <Popover>
           <PopoverTrigger>
-              <FaImage className="p-3 w-10 h-10 hover:bg-gray-300 active:bg-gray-300 rounded"/>
+            <FaImage className="p-3 w-10 h-10 hover:bg-gray-300 active:bg-gray-300 rounded" />
           </PopoverTrigger>
           <PopoverContent>
             <Label htmlFor="image">Image</Label>
             <div className="flex gap-2">
-              <Input
-                ref={inputRef}
-                name="image"
-                type="file"
-                accept={`image/png, image/jpeg, image/webp`}
-              />
-              <p>Not Available</p>
+              <form action={addImage} className="flex flex-col gap-2 ">
+                <Input name="imgName" type="text" placeholder="image name" />
+                <Input
+                  ref={inputRef}
+                  name="image"
+                  type="file"
+                  accept={`image/png, image/jpeg, image/webp`}
+                />
+
+                <Button> Submit</Button>
+              </form>
             </div>
           </PopoverContent>
         </Popover>

@@ -10,7 +10,7 @@ export async function createFn(data: FormData) {
   const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
   const vercel_token = cookies().get("vercel_tokens");
   if (!vercel_token) {
-    redirect("https://vercel.com/integrations/lmao-testing/new");
+    redirect(`https://vercel.com/integrations/${process.env.VERCEL_SLUG}/new`);
   }
   const token = cookies().get("token");
   const access_token = JSON.parse(vercel_token.value).access_token;
@@ -100,7 +100,7 @@ export async function editFn(siteName: string, data: FormData) {
   const token = cookies().get("token");
   const vercel_token = cookies().get("vercel_tokens");
   if (!vercel_token) {
-    redirect("https://vercel.com/integrations/lmao-testing/new");
+    redirect(`https://vercel.com/integrations/${process.env.VERCEL_SLUG}/new`);
   }
   const access_token = JSON.parse(vercel_token.value);
   const site = await db.sites.findFirst({ where: { name: siteName } });
@@ -216,7 +216,7 @@ export async function deploy(id: string) {
   const site = await db.sites.findUnique({ where: { id: id } });
   const auth_token = cookies().get("token");
   if (!token) {
-    redirect("https://vercel.com/integrations/lmao-testing/new");
+    redirect(`https://vercel.com/integrations/${process.env.VERCEL_SLUG}/new`);
   }
   if (!auth_token) {
     redirect("/login");

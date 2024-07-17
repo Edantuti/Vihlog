@@ -11,7 +11,6 @@ export async function GET(req: NextRequest) {
   if (!next) {
     return NextResponse.json(null, { status: 400 });
   }
-  console.log(`${process.env.BACKEND_URL}/api/vercel/callback`)
   const tokens = await fetch("https://api.vercel.com/v2/oauth/access_token", {
     method: "POST",
     body: new URLSearchParams({
@@ -31,7 +30,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(res_data, { status: 400 });
   }
   cookies().set("vercel_tokens", JSON.stringify(res_data));
-  const response = await fetch(next);
+  await fetch(next);
   return NextResponse.json(null, {
     status: 302,
     headers: { Location: "/dashboard" },

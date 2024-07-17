@@ -44,9 +44,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
         },
       });
     }
-    const session = await lucia.createSession(existingUser.id, {
-      accessToken: tokens.accessToken,
-    });
+    const session = await lucia.createSession(existingUser.id,{});
     const sessionCookie = lucia.createSessionCookie(session.id);
     cookies().set(
       sessionCookie.name,

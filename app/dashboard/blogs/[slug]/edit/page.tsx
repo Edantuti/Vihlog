@@ -2,9 +2,12 @@ import EditorConfiguration from "@/components/EditorConfiguration";
 import { db } from "@/utils/db";
 import { redirect } from "next/navigation";
 import { retrieveFn } from "@/app/actions/blog/actions";
+import { getUser } from "@/utils/auth";
 export default async function Page({ params }: { params: { slug: string } }) {
+  const {user} = await getUser()
+  if(!user) redirect('/login')
   const blog = await db.blog.findFirst({
-    where: { title: decodeURI(params.slug) },
+    where: { title: decodeURI(params.slug), userId: user.id},
   });
   if (!blog) {
     redirect("/dashboard/blogs");

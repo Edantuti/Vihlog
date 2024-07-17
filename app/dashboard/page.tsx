@@ -23,7 +23,7 @@ export default async function Page() {
             </section>
           ))}
         {sites && sites.length > 0 && (
-          <section className="flex w-full items-center">
+          <section className="flex w-full items-center gap-2">
             {sites &&
               sites.map(
                 (data: {

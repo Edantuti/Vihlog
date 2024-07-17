@@ -1,13 +1,13 @@
 "use server";
 import { lucia } from "@/utils/auth";
 import { cookies } from "next/headers";
-import { parse, HTMLElement, Node } from "node-html-parser";
 import TurnDownService from "turndown";
 import { db } from "@/utils/db";
 import { redirect } from "next/navigation";
 import matter from "gray-matter";
 import showdown from "showdown";
 import { revalidatePath } from "next/cache";
+
 export async function editFn(blogId: string, content: string, data: FormData) {
   const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
   const token = cookies().get("token");
@@ -26,7 +26,7 @@ export async function editFn(blogId: string, content: string, data: FormData) {
       headers: {
         Authorization: `Bearer ${token.value}`,
       },
-    },
+    }
   );
 
   const file = await fileContent.json();
@@ -43,7 +43,7 @@ export async function editFn(blogId: string, content: string, data: FormData) {
     description,
     blog!.createdAt.getTime(),
     new Date().getTime(),
-    mdContent,
+    mdContent
   );
   if (title === blog!.title) {
     const res = await fetch(
@@ -58,7 +58,7 @@ export async function editFn(blogId: string, content: string, data: FormData) {
           content: IDK,
           sha: file.sha,
         }),
-      },
+      }
     );
     let res_data = await res.json();
     if (!res.ok) {
@@ -85,7 +85,7 @@ export async function editFn(blogId: string, content: string, data: FormData) {
         message: `Deleting ${blog!.title}`,
         sha: file.sha,
       }),
-    },
+    }
   );
   if (!response.ok) {
     return { error: "Something went wrong" };
@@ -109,7 +109,7 @@ export async function editFn(blogId: string, content: string, data: FormData) {
         message: `Creating ${title}`,
         content: IDK,
       }),
-    },
+    }
   );
   let res_data = await response.json();
   if (!response.ok) {
@@ -132,7 +132,7 @@ export async function retrieveFn(blogId: string) {
       headers: {
         Authorization: `Bearer ${token.value}`,
       },
-    },
+    }
   );
   const res_data = await response.json();
   if (!response.ok) {
@@ -159,7 +159,7 @@ export async function deleteFn(blogId: string) {
   if (!blog || !token) return;
   //TODO: Check this out
   console.log(
-    `https://api.github.com/repos/${blog.sites.fullName}/contents/blog/${blog.title}.mdx`,
+    `https://api.github.com/repos/${blog.sites.fullName}/contents/blog/${blog.title}.mdx`
   );
   let response = await fetch(
     `https://api.github.com/repos/${blog.sites.fullName}/contents/blog/${blog.title}.mdx`,
@@ -167,7 +167,7 @@ export async function deleteFn(blogId: string) {
       headers: {
         Authorization: `Bearer ${token.value}`,
       },
-    },
+    }
   );
   let res_data = await response.json();
   if (!response.ok) {
@@ -185,7 +185,7 @@ export async function deleteFn(blogId: string) {
         message: `Deleting ${blog.title}`,
         sha: res_data.sha,
       }),
-    },
+    }
   );
   res_data = await response.json();
   if (!response.ok) {
@@ -200,7 +200,7 @@ export async function createFn(data: FormData) {
   if (!data.get("name") || !data.get("description") || !data.get("site"))
     return;
   const site: { id: string; fullName: string } = JSON.parse(
-    data.get("site")!.toString(),
+    data.get("site")!.toString()
   );
   const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
   if (!sessionId) return;
@@ -211,7 +211,7 @@ export async function createFn(data: FormData) {
     data.get("description")!.toString(),
     new Date().getTime(),
     new Date().getTime(),
-    `# Hello world \nLooking forward to this.`,
+    `# Hello world \nLooking forward to this.`
   );
 
   const response = await fetch(
@@ -225,7 +225,7 @@ export async function createFn(data: FormData) {
         message: `Creating ${data.get("name")!.toString()}`,
         content: content,
       }),
-    },
+    }
   );
   const res_data = await response.json();
   if (!response.ok) {
@@ -249,7 +249,7 @@ function blogTemplate(
   description: string | null,
   time: number,
   updated_time: number,
-  content: string,
+  content: string
 ) {
   const data = `---
 title: "${title}"
