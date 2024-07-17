@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ReactNode } from "react";
 import { useFormStatus } from "react-dom";
 
-export default function SubmitButton({ children, className }: { children?: string | ReactNode, className:string }) {
+export default function SubmitButton({ children, className }: { children?: string | ReactNode, className?:string }) {
   const { pending } = useFormStatus();
-  return <Button disabled={pending}>{children ? children : "Submit"}</Button>;
+  return <Button className={className} disabled={pending}>{children ? children : "Submit"}</Button>;
 }

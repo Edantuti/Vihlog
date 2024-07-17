@@ -44,7 +44,7 @@ export default async function Page() {
                       websites from Github.
                     </li>
                     <li>
-                      Deleting the site, doesn't delete the repo created in
+                      Deleting the site, doesn{"'"}t delete the repo created in
                       Github, and the project created in Vercel.
                     </li>
                   </ul>
@@ -70,21 +70,3 @@ export default async function Page() {
     </section>
   );
 }
-// <Grid columns="2" gap="3" width="auto">
-//   <Flex
-//     justify={"center"}
-//     align={"center"}
-//     className="h-screen bg-gray-400"
-//   >
-//     <Flex
-//       width="20rem"
-//       height="30rem"
-//       direction={"column"}
-//       justify={"start"}
-//       align="center"
-//       className=""
-//     >
-//       <Heading as="h1">Login</Heading>
-//     </Flex>
-//   </Flex>
-// </Grid>
