@@ -23,7 +23,6 @@ export async function GET(req: NextRequest, res: NextResponse) {
         Authorization: `Bearer ${tokens.accessToken}`,
       },
     });
-
     const githubUser: GitHubUser = await githubUserResponse.json();
     // Replace this with your own DB client.
     let existingUser = await db.user.findUnique({
@@ -31,13 +30,12 @@ export async function GET(req: NextRequest, res: NextResponse) {
         github_id: githubUser.id,
       },
     });
-
     if (!existingUser) {
       //TODO: Required to make a onboarding route from here
       existingUser = await db.user.create({
         data: {
           id: generateId(15),
-          name: githubUser.name,
+          name: githubUser.login,
           github_id: githubUser.id,
           email_verified: false,
           photo: githubUser.avatar_url,
@@ -64,7 +62,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
 
 interface GitHubUser {
   id: number;
-  name: string;
+  login: string;
   email: string;
   avatar_url: string;
 }
