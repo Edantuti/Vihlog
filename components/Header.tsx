@@ -60,7 +60,7 @@ async function Header() {
             <Link href="/dashboard">
               <DropdownMenuItem>Dashboard</DropdownMenuItem>
             </Link>
-            <Link href="https://vercel.com/integrations/lmao-testing/new">
+            <Link href={`https://vercel.com/integrations/${process.env.VERCEL_SLUG}/new`}>
               <DropdownMenuItem className="bg-black m-2 text-white group hover:text-black flex items-center text-sm gap-2">
                 <SiVercel className=" fill-white group-hover:fill-black" />{" "}
                 Connect to Vercel
