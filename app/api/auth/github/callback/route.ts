@@ -42,12 +42,12 @@ export async function GET(req: NextRequest, res: NextResponse) {
         },
       });
     }
-    const session = await lucia.createSession(existingUser.id,{});
+    const session = await lucia.createSession(existingUser.id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
     cookies().set(
       sessionCookie.name,
       sessionCookie.value,
-      sessionCookie.attributes,
+      sessionCookie.attributes
     );
     cookies().set("token", tokens.accessToken);
   } catch (error) {

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { FaEdit } from "react-icons/fa";
 import { IoTrashBin } from "react-icons/io5";
+import {Card,CardHeader, CardContent, CardDescription, CardFooter, CardTitle} from "@/components/ui/card"
 import { deleteFn } from "@/app/actions/blog/actions";
 import Image from "next/image";
 import { FormButton } from "./FormButton";
@@ -17,32 +18,56 @@ export default function CardBlog({
 }) {
   const deleteFnW = deleteFn.bind(null, blogId);
   return (
-    <article className="relative w-72 rounded border">
-      <div className="absolute right-2 top-2 flex items-center gap-2">
-        <Link href={`blogs/${name}/edit`}>
-          <Button variant={"secondary"} className="px-4 py-1">
-            <FaEdit />
-          </Button>
-        </Link>
-        <form action={deleteFnW}>
-          <FormButton
-            type="submit"
-            variant={"destructive"}
-            className="group px-4 py-1 shadow-inner"
-          >
-            <IoTrashBin />
-          </FormButton>
-        </form>
-      </div>
-      <Image
-        src=""
-        alt=""
-        className="h-32 w-full overflow-hidden bg-blue-200"
-      />
-      <div className="mx-4 my-2 space-y-2">
-        <h4>{name}</h4>
-        <p className="text-xs">{description}</p>
-      </div>
-    </article>
+    <Card className=" overflow-hidden">
+       <Image
+         src=""
+         alt=""
+         className="h-16 w-72 bg-blue-200"
+       />
+      <CardHeader>
+        <CardTitle>{name}</CardTitle>
+        <CardDescription>{description}</CardDescription>
+      </CardHeader>
+      <CardFooter className="flex items-center gap-2">
+
+         <Link href={`blogs/${name}/edit`}>
+           <Button variant={"secondary"}>
+             <FaEdit className="aspect-square"/>
+           </Button>
+         </Link>
+         <form action={deleteFnW}>
+           <FormButton
+             type="submit"
+             variant={"destructive"}
+             className="group shadow-inner"
+           >
+             <IoTrashBin className="aspect-square" />
+           </FormButton>
+         </form>
+
+      </CardFooter>
+    </Card>
+    // <article className="relative w-72 rounded border">
+    //   <div className="absolute right-2 top-2 flex items-center gap-2">
+    //     <Link href={`blogs/${name}/edit`}>
+    //       <Button variant={"secondary"}>
+    //         <FaEdit className="aspect-square"/>
+    //       </Button>
+    //     </Link>
+    //     <form action={deleteFnW}>
+    //       <FormButton
+    //         type="submit"
+    //         variant={"destructive"}
+    //         className="group shadow-inner"
+    //       >
+    //         <IoTrashBin className="aspect-square" />
+    //       </FormButton>
+    //     </form>
+    //   </div>
+    //   <div className="mx-4 my-2 space-y-2">
+    //     <h4>{name}</h4>
+    //     <p className="text-xs">{description}</p>
+    //   </div>
+    // </article>
   );
 }

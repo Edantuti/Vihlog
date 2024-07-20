@@ -31,16 +31,18 @@ export default async function Page() {
                   id: string;
                   description: string;
                   name: string;
+                  deploy: boolean;
                   fullName: string;
                 }) => (
                   <CardSite
                     key={data.id}
                     id={data.id}
+                    deployed={data.deploy}
                     name={data.name}
                     description={data.description}
                     fullname={data.fullName}
                   />
-                ),
+                )
               )}
           </section>
         )}

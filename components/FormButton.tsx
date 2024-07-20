@@ -9,12 +9,14 @@ import { ReactNode, useEffect, useState } from "react";
 function FormButton({
   children,
   variant,
+  disabled,
   className,
   type,
 }: {
   className?: string;
   children: ReactNode;
-  type?:"submit"|"button";
+  disabled?: boolean;
+  type?: "submit" | "button";
   variant?:
     | "secondary"
     | "destructive"
@@ -27,8 +29,23 @@ function FormButton({
 }) {
   const { pending } = useFormStatus();
   return (
-    <Button disabled={pending } variant={variant} className={className} type={type}>
-      {pending  ? <Image src={Loading} alt="Loading" className="w-9 h-9 aspect-square" width={10} height={10} /> : children}
+    <Button
+      disabled={pending || disabled}
+      variant={variant}
+      className={className}
+      type={type}
+    >
+      {pending ? (
+        <Image
+          src={Loading}
+          alt="Loading"
+          className="w-9 h-9 aspect-square"
+          width={10}
+          height={10}
+        />
+      ) : (
+        children
+      )}
     </Button>
   );
 }

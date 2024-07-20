@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import CardBlog from "../../../components/cardBlog";
 import { getWithBlogFn } from "@/app/actions/site/actions";
-import { clearBlogs } from "@/app/actions/(temp)/clearCookiesBlog/actions";
 import { FormButton } from "@/components/FormButton";
 
 export default async function Page() {
@@ -40,8 +39,8 @@ export default async function Page() {
               key={`${data.id}`}
               className="py-5 space-y-2"
             >
-              <h3 className="text-xl">Site Name: {data.name}</h3>
-              <p className="text-sm">Description: {data.description}</p>
+              <h3 className="text-xl font-medium">{data.name}</h3>
+              <p className="text-sm font-mono">{data.description}</p>
               <BlogSection blog={data.Blog} />
             </article>
           ))}
