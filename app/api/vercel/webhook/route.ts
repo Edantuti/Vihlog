@@ -1,8 +1,6 @@
 import { db } from "@/utils/db";
-import { getUser } from "@/utils/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 export async function POST(req: NextRequest) {
   //TODO: Requires a Fix
@@ -13,6 +11,7 @@ export async function POST(req: NextRequest) {
         name: data.payload.name,
       },
     });
+    if (!site) return NextResponse.json(null);
     await db.sites.update({
       data: {
         deploy: false,
@@ -29,6 +28,7 @@ export async function POST(req: NextRequest) {
         name: data.payload.name,
       },
     });
+    if (!site) return NextResponse.json(null);
     await db.sites.update({
       data: {
         deploy: true,

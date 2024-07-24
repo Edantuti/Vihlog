@@ -29,6 +29,7 @@ async function Header() {
           <Link
             href="/dashboard"
             className="rounded px-2 py-1 hover:bg-gray-200"
+            prefetch={false}
           >
             Dashboard
           </Link>

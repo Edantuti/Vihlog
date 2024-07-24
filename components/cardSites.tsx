@@ -30,13 +30,13 @@ export default function CardSite({
   const deployWithId = deploy.bind(null, id);
   return (
     <Card className="min-w-72">
-      <CardHeader>
+      <CardHeader className="relative">
         <CardTitle className="text-xl">
           {name}{" "}
           {deployed ? (
-            <Badge className="bg-green-500">Deployed</Badge>
+            <Badge className="bg-green-500 absolute top-8 right-4 hover:bg-green-500">Deployed</Badge>
           ) : (
-            <Badge className="bg-yellow-500">Deploying</Badge>
+            <Badge className="bg-yellow-500 absolute top-8 right-4 hover:bg-yellow-500">Deploying</Badge>
           )}
         </CardTitle>
         <CardDescription className="text-sm text-neutral-700">

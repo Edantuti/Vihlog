@@ -24,7 +24,7 @@ export default function LoginDialog() {
   return (
     <Dialog>
       <DialogTrigger>
-        <Button className="flex gap-2">Github</Button>
+        <Button className="flex gap-2 w-80"><FaGithub />Github</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
