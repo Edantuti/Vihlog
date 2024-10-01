@@ -9,7 +9,7 @@ import { toast } from "sonner";
 function Forms() {
   async function serverAction(formData: FormData) {
     const result = await createFn(formData);
-    if (result && result.error) {
+    if (result?.error) {
       return toast.error("Some Happend");
     }
     toast.success("Form Submitted.");

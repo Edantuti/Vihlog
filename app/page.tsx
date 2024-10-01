@@ -27,7 +27,7 @@ export default async function Home() {
 
         {user && (
           <div className="flex gap-2">
-            <Button variant={"secondary"} className="px-4 py-1">
+            <Button asChild variant={"secondary"} className="px-4 py-1">
               <Link href="/dashboard">Dashboard</Link>
             </Button>
             <form action={logout}>
@@ -52,7 +52,7 @@ export default async function Home() {
         </div>
       </AuroraBackground>
       <footer className="h-16 bg-neutral-100 mx-auto border-t flex items-center justify-center">
-        <p className="text-center">Copyright &copy; 2024 by Edantuti</p> 
+        <p className="text-center">Copyright &copy; 2024 by Edantuti</p>
       </footer>
     </>
   );

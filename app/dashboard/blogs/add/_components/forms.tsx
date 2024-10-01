@@ -11,12 +11,12 @@ import { revalidatePath } from "next/cache";
 function Forms({
   sites,
 }: {
-  sites: { id: string; fullName: string; name: string }[];
+  readonly sites: { id: string; fullName: string; name: string }[];
 }) {
   async function serverAction(formData: FormData) {
     const result = await createFn(formData);
 
-    if (result && result.error) {
+    if (result?.error) {
       return toast.error("Some Happend");
     }
     toast.success("Form Submitted.");
@@ -32,20 +32,19 @@ function Forms({
           <CN.SelectValue placeholder="Choose the sites" />
         </CN.SelectTrigger>
         <CN.SelectContent>
-          {sites &&
-            sites.map(
-              (data: { id: string; name: string; fullName: string }) => (
-                <CN.SelectItem
-                  key={data.id}
-                  value={JSON.stringify({
-                    id: data.id,
-                    fullName: data.fullName,
-                  })}
-                >
-                  {data.name}
-                </CN.SelectItem>
-              ),
-            )}
+          {sites?.map(
+            (data: { id: string; name: string; fullName: string }) => (
+              <CN.SelectItem
+                key={data.id}
+                value={JSON.stringify({
+                  id: data.id,
+                  fullName: data.fullName,
+                })}
+              >
+                {data.name}
+              </CN.SelectItem>
+            ),
+          )}
         </CN.SelectContent>
       </CN.Select>
       <SubmitButton />

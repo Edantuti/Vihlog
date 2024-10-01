@@ -13,18 +13,17 @@ function FormButton({
   className,
   type,
 }: {
-  className?: string;
+  readonly className?: string;
   children: ReactNode;
-  disabled?: boolean;
-  type?: "submit" | "button";
-  variant?:
+  readonly disabled?: boolean;
+  readonly type?: "submit" | "button";
+  readonly variant?:
     | "secondary"
     | "destructive"
     | "default"
     | "link"
     | "outline"
     | "ghost"
-    | undefined
     | null;
 }) {
   const { pending } = useFormStatus();

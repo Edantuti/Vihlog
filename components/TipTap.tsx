@@ -1,6 +1,11 @@
 "use client";
 import { Dispatch, SetStateAction, useRef } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
+import {
+  useEditor,
+  EditorContent,
+  Editor,
+  ChainedCommands,
+} from "@tiptap/react";
 import Underline from "@tiptap/extension-underline";
 import Document from "@tiptap/extension-document";
 import StarterKit from "@tiptap/starter-kit";
@@ -39,8 +44,9 @@ const CustomDocument = Document.extend({
 //TODO: Adding custom tag for adding description.
 //TODO: Width fixing for the editor.
 //TODO: Add Collabration feature.
+//FIX: Add Context for getting the html data
 
-export default function Editor({
+export default function BlogEditor({
   onChange,
   content,
 }: {
@@ -80,6 +86,12 @@ export default function Editor({
       },
     },
   });
+  interface StyleOperation {
+    name: string;
+    set: (chain: ChainedCommands) => ChainedCommands;
+    unset: (chain: ChainedCommands) => ChainedCommands;
+  }
+
   async function addImage(formData: FormData) {
     if (!formData.get("imgName")) {
       toast.error("Provide file name");
@@ -88,7 +100,7 @@ export default function Editor({
     if (inputRef?.current?.files) {
       const file = inputRef?.current?.files[0];
       const reader = new FileReader();
-      console.log(file)
+      console.log(file);
       reader.readAsDataURL(file);
       reader.onload = async () => {
         const response = await fetch("/api/upload", {
@@ -131,44 +143,53 @@ export default function Editor({
         className="border w-fit px-2 py-1 rounded-t mx-auto"
         type="multiple"
         onValueChange={(value) => {
-          const edit = editor?.chain();
-          if (value.includes("bold")) {
-            if (editor?.view.state.selection.empty) {
-              edit?.createParagraphNear().setBold();
+          if (!editor) return;
+
+          const edit = editor.chain();
+
+          const applyStyle = (
+            styleIncluded: boolean,
+            setStyle: (chain: ChainedCommands) => ChainedCommands,
+            unsetStyle: (chain: ChainedCommands) => ChainedCommands,
+          ): void => {
+            if (styleIncluded) {
+              if (editor.view.state.selection.empty) {
+                edit.createParagraphNear();
+              }
+              setStyle(edit);
             } else {
-              edit?.setBold();
+              unsetStyle(edit);
             }
-          } else {
-            edit?.unsetBold();
-          }
-          if (value.includes("italic")) {
-            if (editor?.view.state.selection.empty) {
-              edit?.createParagraphNear().setItalic();
-            } else {
-              edit?.setItalic();
-            }
-          } else {
-            edit?.unsetItalic();
-          }
-          if (value.includes("strike")) {
-            if (editor?.view.state.selection.empty) {
-              edit?.createParagraphNear().setStrike();
-            } else {
-              edit?.setStrike();
-            }
-          } else {
-            edit?.unsetStrike();
-          }
-          if (value.includes("underline")) {
-            if (editor?.view.state.selection.empty) {
-              edit?.createParagraphNear().setUnderline();
-            } else {
-              edit?.setUnderline();
-            }
-          } else {
-            edit?.unsetUnderline();
-          }
-          edit?.run();
+          };
+
+          const styles: StyleOperation[] = [
+            {
+              name: "bold",
+              set: (chain) => chain.setBold(),
+              unset: (chain) => chain.unsetBold(),
+            },
+            {
+              name: "italic",
+              set: (chain) => chain.setItalic(),
+              unset: (chain) => chain.unsetItalic(),
+            },
+            {
+              name: "strike",
+              set: (chain) => chain.setStrike(),
+              unset: (chain) => chain.unsetStrike(),
+            },
+            {
+              name: "underline",
+              set: (chain) => chain.setUnderline(),
+              unset: (chain) => chain.unsetUnderline(),
+            },
+          ];
+
+          styles.forEach((style) => {
+            applyStyle(value.includes(style.name), style.set, style.unset);
+          });
+
+          edit.run();
         }}
       >
         <Button variant="ghost" onClick={() => addHeading("h2")}>

@@ -20,11 +20,11 @@ export default function CardSite({
   description,
   fullname,
 }: {
-  name: string;
-  id: string;
-  deployed: boolean;
-  description: string;
-  fullname: string;
+  readonly name: string;
+  readonly id: string;
+  readonly deployed: boolean;
+  readonly description: string;
+  readonly fullname: string;
 }) {
   const deleteFnW = deleteFn.bind(null, id);
   const deployWithId = deploy.bind(null, id);
@@ -34,9 +34,13 @@ export default function CardSite({
         <CardTitle className="text-xl">
           {name}{" "}
           {deployed ? (
-            <Badge className="bg-green-500 absolute top-8 right-4 hover:bg-green-500">Deployed</Badge>
+            <Badge className="bg-green-500 absolute top-8 right-4 hover:bg-green-500">
+              Deployed
+            </Badge>
           ) : (
-            <Badge className="bg-yellow-500 absolute top-8 right-4 hover:bg-yellow-500">Deploying</Badge>
+            <Badge className="bg-yellow-500 absolute top-8 right-4 hover:bg-yellow-500">
+              Deploying
+            </Badge>
           )}
         </CardTitle>
         <CardDescription className="text-sm text-neutral-700">

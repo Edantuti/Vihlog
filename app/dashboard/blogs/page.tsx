@@ -35,10 +35,7 @@ export default async function Page() {
         {/*TODO: Removing "any" from here */}
         {getSites.length > 0 &&
           getSites.map((data: any) => (
-            <article
-              key={`${data.id}`}
-              className="py-5 space-y-2"
-            >
+            <article key={`${data.id}`} className="py-5 space-y-2">
               <h3 className="text-xl font-medium">{data.name}</h3>
               <p className="text-sm font-mono">{data.description}</p>
               <BlogSection blog={data.Blog} />
@@ -52,7 +49,7 @@ export default async function Page() {
 function BlogSection({
   blog,
 }: {
-  blog: { id: string; title: string; description: string }[];
+  readonly blog: { id: string; title: string; description: string }[];
 }) {
   if (!blog) {
     return (
@@ -79,7 +76,7 @@ function BlogSection({
             description={description}
             blogId={id}
           />
-        )
+        ),
       )}
     </section>
   );

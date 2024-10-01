@@ -49,7 +49,7 @@ export async function createFn(data: FormData) {
       description: res_data.description,
       name: res_data.name,
       fullName: res_data.full_name,
-      private:Boolean(data.get('visible')) || false
+      private: Boolean(data.get("visible")) || false,
     },
   });
   response = await fetch(`https://api.vercel.com/v10/projects`, {
@@ -82,7 +82,7 @@ export async function createFn(data: FormData) {
     type: "github",
   };
 
-  response = await fetch(`https://api.vercel.com/v13/deployments`, {
+  await fetch(`https://api.vercel.com/v13/deployments`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${access_token}`,
@@ -158,7 +158,7 @@ export async function editFn(siteName: string, data: FormData) {
       name: res_data.name,
       fullName: res_data.full_name,
       description: res_data.description,
-      private:Boolean(data.get('visible')) || false
+      private: Boolean(data.get("visible")) || false,
     },
   });
   revalidatePath("/dashboard");

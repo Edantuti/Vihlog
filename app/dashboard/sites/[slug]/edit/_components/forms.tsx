@@ -12,13 +12,13 @@ function Forms({
   site,
   params,
 }: {
-  site: { name: string; description: string };
-  params: { slug: string };
+  readonly site: { name: string; description: string };
+  readonly params: { slug: string };
 }) {
   async function serverActions(formData: FormData) {
     const editFnWithId = editFn.bind(null, decodeURI(params.slug));
     const result = await editFnWithId(formData);
-    if (result && result.error) {
+    if (result?.error) {
       return toast.error("Some Happend");
     }
     toast.success("Form Submitted.");
